@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+    #map,
+    #pano {
+        float: left;
+        height: 100%;
+        width: 50%;
+    }
+
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="pano"></div>
+    <script>
+
+	// note :-
+	// 1) key vali script file jquery pela add karvi
+	// 1) initMap() ne ready ma call karvathi error aavse console ma
+
+    var marker;
+
+    function initMap() {
+
+        var myLatlng = { lat: 23.035188, lng: 72.500447 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: myLatlng
+        });
+
+        marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+            position: myLatlng,
+            title: 'TatvaSoft',
+            label: 'T'
+        });
+        marker.addListener('click', toggleBounce);
+
+        map.addListener('center_changed', function() {
+            window.setTimeout(function() {
+                map.panTo(marker.getPosition());
+            }, 3000);
+        });
+
+        marker.addListener('click', function() {
+            map.setZoom(16);
+            map.setCenter(marker.getPosition());
+        });
+
+        google.maps.event.addDomListener(marker, 'click', function() {
+            window.alert('Looking For TatvaSoft!');
+        });
+
+        var panorama = new google.maps.StreetViewPanorama(
+            document.getElementById('pano'), {
+                position: myLatlng,
+                pov: {
+                    heading: 34,
+                    pitch: 10
+                }
+            });
+        map.setStreetView(panorama);
+    }
+
+    function toggleBounce() {
+        window.setTimeout(function() {
+            animation: google.maps.Animation.DROP
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }, 200);
+    }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2CPGJnnSelflBXBpSbuAzbLI0B6pwzPQ&callback=initMap" async defer></script>
+</body>
+
+</html>
